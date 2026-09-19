@@ -5,8 +5,22 @@ Employer-facing full-stack portfolio. The backend follows the same FastAPI shape
 ## Stack
 
 - FastAPI, SQLAlchemy 2.0, Pydantic v2, SQLite
-- Vanilla HTML, CSS, and JavaScript (same frontend approach as the coffee shop and job board apps)
+- Vanilla HTML, CSS, JavaScript, and Three.js
 - Seeded from the CV: experience, education, skills, projects, headshot, and PDF
+- Drive-around campus inspired by [Bruno Simon's folio-2025](https://github.com/brunosimon/folio-2025) game loop (inputs → vehicle → view → zones → overlay), not his models or world
+
+## Frontend game loop
+
+Mirrors the staged ticker in folio-2025, kept as small ES modules next to the FastAPI layers:
+
+| Tick | Module | Role |
+|---|---|---|
+| 0 | `js/game/ticker.js`, `inputs.js` | Time, keyboard, pointer orbit, on-screen stick |
+| 1–6 | `js/game/vehicle.js` | Speed, steering, collisions |
+| 7 | `js/game/view.js` | Follow camera and intro reveal |
+| 8 | `js/game/zones.js`, `campus.js` | Enter/leave districts, pulsing interact rings |
+| overlay | `js/ui.js` | Welcome card, panels, contact form from the API |
+| 998 | `js/game.js` | Render + minimap |
 
 ## Layering
 
@@ -28,6 +42,8 @@ API schema  →  DTO  →  service  →  repository  →  SQLAlchemy model
 Routes never return ORM rows. They validate **DTO → schema**.
 
 ## Run locally
+
+Double-click `start.cmd`, or:
 
 ```powershell
 cd backend

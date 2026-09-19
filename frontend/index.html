@@ -8,90 +8,56 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="stylesheet" href="/static/css/world.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+      }
+    }
+  </script>
 </head>
-<body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="/">
+<body class="world">
+  <canvas class="world-canvas" data-canvas></canvas>
+
+  <div class="hud">
+    <div class="hud-top">
+      <a class="brand brand-world" href="/">
         <span class="brand-mark">SS</span>
         <span class="brand-copy"><strong>Shantanu Soni</strong><small>Portfolio</small></span>
       </a>
-      <button class="nav-toggle" type="button" data-nav-toggle>Menu</button>
-      <nav class="site-nav" data-nav>
-        <a href="/">Home</a>
-        <a href="/experience">Experience</a>
-        <a href="/projects">Projects</a>
-        <a href="/skills">Skills</a>
-        <a href="/education">Education</a>
-        <a href="/contact">Contact</a>
-      </nav>
-    </div>
-  </header>
-
-  <section class="hero">
-    <div class="container hero-grid">
-      <div data-hero>
-        <p class="loading">Loading profile…</p>
-      </div>
-      <div class="portrait-wrap">
-        <div class="portrait">
-          <img data-photo src="/static/assets/headshot.jpg" alt="Shantanu Soni" />
-        </div>
+      <div class="hud-actions">
+        <button class="btn" type="button" data-quality>Quality: High</button>
+        <button class="btn" type="button" data-respawn>I'm stuck</button>
       </div>
     </div>
-  </section>
-
-  <div class="container">
-    <div class="stats" data-stats></div>
+    <div class="prompt is-hidden" data-prompt></div>
+    <p class="help">WASD or arrows to drive · Shift to boost · Enter to interact · drag to look · R to respawn</p>
+    <canvas class="minimap" width="148" height="148" data-minimap></canvas>
+    <div class="stick" data-stick><div class="stick-knob" data-stick-knob></div></div>
+    <button class="btn btn-primary interact-btn" type="button" data-interact>Interact</button>
   </div>
 
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Stack</span>
-          <h2 class="section-title">Featured skills</h2>
-        </div>
-        <a class="btn btn-ghost" href="/skills">All skills</a>
-      </div>
-      <div class="chip-row" data-featured-skills></div>
+  <aside class="panel" data-panel>
+    <div class="panel-head">
+      <h2 data-panel-title>About</h2>
+      <button class="btn btn-ghost" type="button" data-close-panel>Close</button>
+    </div>
+    <div class="panel-body" data-panel-body></div>
+  </aside>
+
+  <section class="intro" data-intro>
+    <div class="intro-card">
+      <span class="eyebrow">Welcome</span>
+      <h1>Drive the campus.</h1>
+      <p>I'm <strong>Shantanu Soni</strong>, a data scientist and emerging AI engineer. Steer through this little night world to read the work — aviation models, agentic workflows, and the stack behind this site.</p>
+      <p>Please don't take out the hangar.</p>
+      <p class="muted" data-load-status>Loading the world…</p>
+      <button class="btn btn-primary" type="button" data-enter>Enter the campus</button>
+      <p class="credit">Interactive drive-around format inspired by <a href="https://bruno-simon.com/" target="_blank" rel="noreferrer">Bruno Simon</a>, rebuilt as an original data-campus for this portfolio.</p>
     </div>
   </section>
 
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Career</span>
-          <h2 class="section-title">Recent experience</h2>
-        </div>
-        <a class="btn btn-ghost" href="/experience">Full timeline</a>
-      </div>
-      <div class="timeline" data-latest-experience></div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Selected work</span>
-          <h2 class="section-title">Featured projects</h2>
-        </div>
-        <a class="btn btn-ghost" href="/projects">All projects</a>
-      </div>
-      <div class="grid-2" data-featured-projects></div>
-    </div>
-  </section>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <span>Shantanu Soni · Epsom, UK</span>
-      <a href="mailto:shantanusoniuv@gmail.com">shantanusoniuv@gmail.com</a>
-    </div>
-  </footer>
-
-  <script src="/static/js/app.js"></script>
-  <script src="/static/js/home.js"></script>
+  <script type="module" src="/static/js/world.js"></script>
 </body>
 </html>
