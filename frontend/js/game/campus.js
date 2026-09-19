@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { makeJaguar } from "./jaguar.js";
 
 export const ZONE_DEFS = [
   { id: "about", label: "About", x: 0, z: 6, r: 9 },
@@ -58,45 +59,6 @@ function labelSprite(text) {
   );
   sprite.scale.set(14, 3.5, 1);
   return sprite;
-}
-
-function makeCar() {
-  const car = new THREE.Group();
-  const body = boxMesh(1.7, 0.55, 3.3, COLORS.navy);
-  body.position.y = 0.55;
-  const cabin = boxMesh(1.45, 0.5, 1.5, COLORS.cabin);
-  cabin.position.set(0, 1.05, -0.25);
-  const stripe = boxMesh(1.74, 0.08, 3.32, COLORS.trim, {
-    emissive: COLORS.trim,
-    emissiveIntensity: 0.35,
-  });
-  stripe.position.y = 0.82;
-  const lightL = boxMesh(0.22, 0.16, 0.12, 0xfff1c2, {
-    emissive: 0xffe08a,
-    emissiveIntensity: 1.4,
-  });
-  const lightR = lightL.clone();
-  lightL.position.set(-0.55, 0.62, 1.66);
-  lightR.position.set(0.55, 0.62, 1.66);
-  car.add(body, cabin, stripe, lightL, lightR);
-  const wheels = [];
-  const wheelGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.28, 16);
-  const wheelMat = mat(0x111111, { roughness: 0.4 });
-  [
-    [-0.85, 0.32, 1.05],
-    [0.85, 0.32, 1.05],
-    [-0.85, 0.32, -1.05],
-    [0.85, 0.32, -1.05],
-  ].forEach((pos) => {
-    const wheel = new THREE.Mesh(wheelGeo, wheelMat);
-    wheel.rotation.z = Math.PI / 2;
-    wheel.position.set(...pos);
-    wheel.castShadow = true;
-    car.add(wheel);
-    wheels.push(wheel);
-  });
-  car.userData.wheels = wheels;
-  return car;
 }
 
 export function createCampus(scene, photoUrl) {
@@ -259,7 +221,8 @@ export function createCampus(scene, photoUrl) {
     scene.add(group);
   });
 
-  const car = makeCar();
+  const car = makeJaguar();
+  car.scale.setScalar(1.18);
   scene.add(car);
 
   return { car, colliders, sun, rings, colors: COLORS };

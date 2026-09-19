@@ -12,6 +12,7 @@ body.world {
 .world-canvas {
   position: fixed;
   inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   display: block;
@@ -23,6 +24,11 @@ body.world {
   inset: 0;
   pointer-events: none;
   z-index: 5;
+}
+
+body:not(.is-playing) .world-canvas,
+body:not(.is-playing) .hud {
+  pointer-events: none;
 }
 
 .hud > * {
@@ -89,9 +95,10 @@ body.world {
 .intro {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 50;
   display: grid;
   place-items: center;
+  pointer-events: auto;
   background:
     radial-gradient(700px 400px at 50% 20%, rgba(232, 185, 74, 0.14), transparent 50%),
     rgba(9, 12, 18, 0.72);
@@ -109,9 +116,12 @@ body.world {
   pointer-events: none;
 }
 
-[data-enter]:disabled {
-  opacity: 0.45;
-  cursor: wait;
+[data-enter] {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+  touch-action: manipulation;
+  pointer-events: auto;
 }
 
 .minimap {
@@ -163,18 +173,6 @@ body.world {
   position: absolute;
   right: 1.4rem;
   bottom: 11.5rem;
-}
-
-.intro {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  display: grid;
-  place-items: center;
-  background:
-    radial-gradient(700px 400px at 50% 20%, rgba(232, 185, 74, 0.14), transparent 50%),
-    rgba(9, 12, 18, 0.72);
-  padding: 1.5rem;
 }
 
 .intro-card {

@@ -20,16 +20,20 @@ export class View {
       this.revealed = Math.min(1, this.revealed + dt * 0.55);
     }
     const t = this.revealed || 0;
-    const back = 9.5 + (1 - t) * 18;
-    const height = 4.8 + (1 - t) * 28;
-    const yaw = this.vehicle.yaw + this.inputs.orbit;
+    const back = 6 + (1 - t) * 14;
+    const height = 2.2 + (1 - t) * 22;
+    const yaw = this.vehicle.yaw + this.inputs.orbit + 0.18;
     this._target.set(
       this.vehicle.position.x - Math.sin(yaw) * back,
       height,
       this.vehicle.position.z - Math.cos(yaw) * back
     );
-    this.camera.position.lerp(this._target, Math.min(1, (t ? 5 : 1.2) * dt));
-    this._look.set(this.vehicle.position.x, 1.2, this.vehicle.position.z);
+    this.camera.position.lerp(this._target, Math.min(1, (t ? 6 : 1.2) * dt));
+    this._look.set(
+      this.vehicle.position.x + Math.sin(this.vehicle.yaw) * 3.2,
+      0.7,
+      this.vehicle.position.z + Math.cos(this.vehicle.yaw) * 3.2
+    );
     this.camera.lookAt(this._look);
     this.inputs.decayOrbit(dt);
   }

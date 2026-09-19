@@ -23,8 +23,8 @@ export class Vehicle {
   }
 
   _hits(x, z) {
-    const hw = 0.95;
-    const hd = 1.5;
+    const hw = 1.05;
+    const hd = 2.15;
     return this.colliders.some(
       (item) => x + hw > item.minX && x - hw < item.maxX && z + hd > item.minZ && z - hd < item.maxZ
     );

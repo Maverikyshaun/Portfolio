@@ -13,21 +13,31 @@ export class UI {
     this.panelBody = document.querySelector("[data-panel-body]");
     this.panelTitle = document.querySelector("[data-panel-title]");
     this.status = document.querySelector("[data-load-status]");
+    this.ready = false;
+    this.wantedPlay = false;
+    this.playing = false;
     this.enterBtn = document.querySelector("[data-enter]");
     this.onPlay = null;
-    if (this.enterBtn) this.enterBtn.disabled = true;
+    if (window.__pendingPlay || document.body.classList.contains("is-want-play")) {
+      this.wantedPlay = true;
+    }
   }
 
   bind() {
-    this.enterBtn?.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      this.dismissIntro();
+    const requestPlay = (event) => {
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
+      this.requestPlay();
+    };
+    this.enterBtn?.addEventListener("pointerdown", requestPlay, { capture: true });
+    this.enterBtn?.addEventListener("click", requestPlay, { capture: true });
+    this.enterBtn?.addEventListener("keydown", (event) => {
+      if (event.code === "Enter" || event.code === "Space") requestPlay(event);
     });
-    this.intro?.addEventListener("click", (event) => {
-      if (!document.body.classList.contains("is-ready")) return;
+    this.intro?.addEventListener("pointerdown", (event) => {
       if (event.target.closest("a")) return;
-      this.dismissIntro();
+      if (event.target.closest("[data-close-panel]")) return;
+      this.requestPlay();
     });
     document.querySelector("[data-close-panel]")?.addEventListener("click", () => this.closePanel());
     document.querySelector("[data-respawn]")?.addEventListener("click", () => this.onRespawn?.());
@@ -38,9 +48,9 @@ export class UI {
     document.querySelector("[data-interact]")?.addEventListener("click", () => this.tryOpen());
     window.addEventListener("keydown", (event) => {
       const typing = ["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName);
-      if (event.code === "Enter" || event.code === "KeyE") {
-        if (!this.intro?.classList.contains("is-hidden")) {
-          this.dismissIntro();
+      if (event.code === "Enter" || event.code === "KeyE" || event.key === "Enter" || event.key === "e" || event.key === "E") {
+        if (!this.playing) {
+          this.requestPlay();
           return;
         }
         if (!typing && !this.panel?.classList.contains("is-open")) this.tryOpen();
@@ -58,22 +68,37 @@ export class UI {
   }
 
   markReady() {
+    this.ready = true;
     document.body.classList.add("is-ready");
-    if (this.enterBtn) this.enterBtn.disabled = false;
-    if (this.status) this.status.textContent = "Ready — click Enter or anywhere on this card.";
+    if (this.status && !this.wantedPlay) this.status.textContent = "Ready — click Enter the campus.";
+    this.flushPlay();
   }
 
   isBlocking() {
-    const introOpen = this.intro && !this.intro.classList.contains("is-hidden");
-    return Boolean(introOpen || this.panel?.classList.contains("is-open"));
+    return !this.playing || Boolean(this.panel?.classList.contains("is-open"));
+  }
+
+  requestPlay() {
+    this.wantedPlay = true;
+    if (!this.ready) {
+      if (this.status) this.status.textContent = "Starting as soon as the world is ready…";
+      if (this.enterBtn) this.enterBtn.textContent = "Starting…";
+      return;
+    }
+    this.flushPlay();
+  }
+
+  flushPlay() {
+    if (!this.wantedPlay || this.playing || !this.ready) return;
+    this.playing = true;
+    this.intro?.classList.add("is-hidden");
+    this.intro?.setAttribute("aria-hidden", "true");
+    document.body.classList.add("is-playing");
+    this.onPlay?.();
   }
 
   dismissIntro() {
-    if (!document.body.classList.contains("is-ready") && !document.body.dataset.startZone) return;
-    this.intro?.classList.add("is-hidden");
-    this.intro?.setAttribute("hidden", "");
-    document.body.classList.add("is-playing");
-    this.onPlay?.();
+    this.requestPlay();
   }
 
   setPrompt(zone) {
